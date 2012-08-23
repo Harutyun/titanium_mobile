@@ -7,6 +7,8 @@
 
 #include "TiNetwork.h"
 
+#include "TiGenericFunctionObject.h"
+#include "TiHttpClientObject.h"
 #include "TiSocketObject.h"
 
 TiNetwork::TiNetwork()
@@ -36,5 +38,23 @@ void TiNetwork::onCreateStaticMembers()
 {
     TiProxy::onCreateStaticMembers();
     TiSocketObject::addObjectToParent(this, objectFactory_);
+    TiGenericFunctionObject::addGenericFunctionToParent(this, "createHTTPClient", this, _createHttpClient);
     // TODO: Add class methods, constants, properties
+}
+
+Handle<Value> TiNetwork::_createHttpClient(void* userContext, TiObject*, const Arguments& args)
+{
+    HandleScope handleScope;
+    TiNetwork* obj = (TiNetwork*) userContext;
+    Handle<ObjectTemplate> global = getObjectTemplateFromJsObject(args.Holder());
+    Handle<Object> result = global->NewInstance();
+    TiHttpClientObject* httpClient = TiHttpClientObject::createHttpClient(obj->objectFactory_);
+    httpClient->setValue(result);
+    if ((args.Length() > 0) && (args[0]->IsObject()))
+    {
+        Local<Object> settingsObj = Local<Object>::Cast(args[0]);
+        httpClient->setParametersFromObject(httpClient, settingsObj);
+    }
+    setTiObjectToJsObject(result, httpClient);
+    return handleScope.Close(result);
 }

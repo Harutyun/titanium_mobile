@@ -30,6 +30,8 @@ protected:
     virtual void onCreateStaticMembers();
 
 private:
+    static Handle<Value> _createHttpClient(void* userContext, TiObject*, const Arguments& args);
+
     TiNetwork();
     explicit TiNetwork(NativeObjectFactory* objectFactory);
     TiNetwork(const TiNetwork&);

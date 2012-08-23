@@ -13,6 +13,7 @@
 #include "NativeButtonObject.h"
 #include "NativeDateTimePickerObject.h"
 #include "NativeDropDownObject.h"
+#include "NativeHttpClientObject.h"
 #include "NativeImageViewObject.h"
 #include "NativeLabelObject.h"
 #include "NativeListViewObject.h"
@@ -77,6 +78,10 @@ NativeObject* NativeObjectFactory::createNativeObject(int type)
 
     case N_TYPE_BUTTON:
         obj = new NativeButtonObject;
+        break;
+
+    case N_TYPE_HTTPCLIENT:
+        obj = NativeHttpClientObject::createHttpClient();
         break;
 
     case N_TYPE_SLIDER:
